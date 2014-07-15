@@ -24,10 +24,11 @@ class App < Sinatra::Base
       INSERT INTO users (username, email, password, name_is_hunter)
       VALUES ('#{params[:username]}', '#{params[:email]}', '#{params[:password]}', '#{params[:name_is_hunter]}')
     SQL
-
     @database_connection.sql(insert_sql)
     flash[:notice] = "Thanks for signing up"
-
-    redirect "/"
+    if @database_connection.sql("SELECT name_is_hunter from users where name_is_hunter") == []
+      flash[:notice] = "You can't regiser if you're not hunter silly!"
+  end
   end
 end
+
